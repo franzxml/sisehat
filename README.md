@@ -1,12 +1,13 @@
 ## Fitur
 
-* Optimasi kombinasi menu sarapan, makan siang, dan makan malam menggunakan Algoritma Genetika
+* Optimasi kombinasi menu sarapan, makan siang, dan malam menggunakan Algoritma Genetika
 * Evaluasi nutrisi berdasarkan standar AKG Kemenkes RI 2019
 * Fungsi fitness berbasis penalti untuk kalori, protein, lemak, karbohidrat, dan anggaran
 * Seleksi tournament dengan elitisme satu individu terbaik
 * Single-point crossover dan random reset mutation
 * Terminasi dini jika fitness target tercapai
 * Pengukuran waktu komputasi GA
+* Konfigurasi parameter GA secara manual untuk keperluan eksperimen (ukuran populasi, probabilitas crossover, probabilitas mutasi, jumlah generasi, fitness target)
 * Grafik konvergensi fitness terbaik, rata-rata, dan terburuk per generasi
 * Unduh dataset makanan dalam format CSV
 * Antarmuka web responsif berbasis React
@@ -37,7 +38,7 @@ sisehat/
 |-- apps/
 |   `-- web/                  # Frontend React
 |       |-- src/
-|       |   |-- components/   # MenuCard, ConstraintBadge, DatasetTable, KonvergensiChart
+|       |   |-- components/   # MenuCard, ConstraintBadge, DatasetTable, KonvergensiChart, ParameterForm
 |       |   |-- services/     # Fungsi fetch ke API
 |       |   |-- types/        # TypeScript interface
 |       |   `-- App.tsx
