@@ -1,0 +1,36 @@
+makanan = {
+    1:  (350,  8, 12, 52, 10000, "Nasi Uduk"),
+    2:  (280, 12,  6, 42, 12000, "Bubur Ayam"),
+    3:  (320, 10,  8, 50,  9000, "Lontong Sayur"),
+    4:  (310, 15,  9, 40,  8000, "Roti Gandum + Telur"),
+    5:  (380, 10, 14, 55, 11000, "Nasi Goreng"),
+    6:  (220,  7,  4, 42,  7000, "Pisang + Susu"),
+    7:  (260,  9,  5, 48,  9000, "Oatmeal + Madu"),
+    8:  (290,  9,  7, 46,  8000, "Ketupat Sayur"),
+    9:  (155, 13, 11,  1,  4000, "Telur Rebus (2 btr)"),
+    10: (160,  1,  0, 38,  3000, "Singkong Rebus"),
+    11: (520, 28, 18, 62, 20000, "Nasi Putih + Ayam Goreng"),
+    12: (480, 30, 10, 60, 22000, "Nasi + Ikan Bakar + Lalapan"),
+    13: (380, 14, 18, 38, 15000, "Gado-Gado"),
+    14: (430, 22, 12, 55, 16000, "Soto Ayam + Nasi"),
+    15: (450, 18, 14, 60, 14000, "Mie Ayam"),
+    16: (390, 20,  8, 58, 12000, "Nasi + Tempe + Sayur"),
+    17: (510, 26, 20, 58, 18000, "Pecel Lele + Nasi"),
+    18: (370, 16,  7, 56, 13000, "Sayur Asem + Nasi + Tahu"),
+    19: (460, 20, 15, 58, 15000, "Bakso + Nasi"),
+    20: (580, 30, 24, 62, 25000, "Nasi + Rendang"),
+    21: (400, 24,  8, 56, 15000, "Nasi + Sup Ayam"),
+    22: (380, 18,  9, 54, 12000, "Nasi + Tumis Kangkung + Tempe"),
+    23: (360, 15, 12, 50, 11000, "Pecel + Nasi"),
+    24: (470, 28, 14, 56, 18000, "Nasi + Ikan Goreng"),
+    25: (520, 26, 20, 58, 30000, "Sop Buntut + Nasi"),
+    26: (350, 16,  8, 52, 11000, "Nasi + Tahu Bacem + Sayur"),
+    27: (490, 30, 14, 58, 20000, "Ayam Bakar + Nasi"),
+    28: (420, 16, 12, 58, 13000, "Mie Rebus + Telur"),
+    29: (360, 12,  8, 56, 12000, "Nasi + Lodeh Sayur"),
+    30: (200,  6,  3, 38, 10000, "Salad Buah + Yogurt"),
+}
+
+SARAPAN_IDS = list(range(1, 11))
+SIANG_IDS   = list(range(11, 21))
+MALAM_IDS   = list(range(21, 31))
