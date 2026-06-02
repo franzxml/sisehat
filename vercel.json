@@ -6,7 +6,6 @@
   ],
   "functions": {
     "apps/api/main.py": {
-      "runtime": "python3.12",
       "maxDuration": 30
     }
   }
