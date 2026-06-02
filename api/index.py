@@ -1,6 +1,1 @@
-import sys
-import os
-
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'apps', 'api'))
-
-from main import app  # noqa: E402, F401
+from main import app  # noqa: F401

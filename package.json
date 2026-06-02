@@ -4,7 +4,7 @@
   "workspaces": ["apps/web"],
   "scripts": {
     "dev": "concurrently --names api,web --prefix-colors green,blue \"bun run dev:api\" \"bun run dev:web\"",
-    "dev:api": "apps/api/.venv/bin/uvicorn main:app --reload --port 8000 --app-dir apps/api",
+    "dev:api": "api/.venv/bin/uvicorn main:app --reload --port 8000 --app-dir api",
     "dev:web": "bun run --cwd apps/web dev",
     "build:web": "bun run --cwd apps/web build"
   },
