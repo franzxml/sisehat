@@ -6,32 +6,50 @@
 * Seleksi tournament dengan elitisme satu individu terbaik
 * Single-point crossover dan random reset mutation
 * Terminasi dini jika fitness target tercapai
-* Evaluasi status pemenuhan setiap constraint secara detail
+* Pengukuran waktu komputasi GA
 * Grafik konvergensi fitness terbaik, rata-rata, dan terburuk per generasi
+* Unduh dataset makanan dalam format CSV
+* Antarmuka web responsif berbasis React
 
 ## Teknologi
 
 * Python 3.8+
-* matplotlib
+* FastAPI
+* Bun
+* React 19
+* Vite
+* TypeScript
+* Tailwind CSS 4
+* Recharts
 
 ## Struktur Folder
 
 ```text
 sisehat/
-|-- data.py       # Dataset 30 makanan dan konstanta rentang ID per waktu makan
-|-- fitness.py    # Fungsi fitness dengan pendekatan penalti
-|-- ga.py         # Logika utama GA: inisialisasi, seleksi, crossover, mutasi
-|-- utils.py      # Fungsi bantu: cetak kromosom, evaluasi constraints, grafik konvergensi
-|-- main.py       # Entry point program
-|-- README.md
-|-- .gitignore
-`-- output/       # Hasil grafik konvergensi (di-generate saat program dijalankan)
-    `-- konvergensi.png
+|-- apps/
+|   |-- api/                  # Backend FastAPI + Algoritma Genetika
+|   |   |-- data.py           # Dataset 30 makanan dan konstanta rentang ID
+|   |   |-- fitness.py        # Fungsi fitness dengan pendekatan penalti
+|   |   |-- ga.py             # Logika utama GA: inisialisasi, seleksi, crossover, mutasi
+|   |   |-- utils.py          # Fungsi bantu: hitung nutrisi, evaluasi constraints, grafik
+|   |   |-- main.py           # FastAPI app dengan endpoint REST
+|   |   |-- cli.py            # Entry point CLI untuk menjalankan GA di terminal
+|   |   `-- requirements.txt
+|   `-- web/                  # Frontend React
+|       |-- src/
+|       |   |-- components/   # MenuCard, ConstraintBadge, DatasetTable, KonvergensiChart
+|       |   |-- services/     # Fungsi fetch ke API
+|       |   |-- types/        # TypeScript interface
+|       |   `-- App.tsx
+|       |-- index.html
+|       `-- package.json
+|-- package.json              # Bun workspaces root
+`-- .gitignore
 ```
 
 ## Cara Menjalankan
 
-1. Pastikan komputer sudah memiliki **Python 3.8+** dan **Git**.
+1. Pastikan komputer sudah memiliki **Python 3.8+**, **Bun**, dan **Git**.
 
 2. Clone repositori.
 
@@ -47,36 +65,53 @@ sisehat/
    cd sisehat
    ```
 
-3. Buat virtual environment.
+3. Setup virtual environment backend.
 
    ```bash
-   python3 -m venv .venv
+   python3 -m venv apps/api/.venv
+   source apps/api/.venv/bin/activate
+   pip install -r apps/api/requirements.txt
    ```
 
-4. Aktifkan virtual environment.
+4. Install dependensi frontend.
 
    ```bash
-   source .venv/bin/activate
+   bun install
    ```
 
-5. Install dependensi.
+5. Jalankan seluruh aplikasi dalam satu perintah.
 
    ```bash
-   pip install matplotlib
+   bun dev
    ```
 
-6. Jalankan program.
+6. Buka browser.
 
-   ```bash
-   python3 main.py
+   ```
+   http://localhost:5173
    ```
 
-## Output
+   API berjalan di:
 
-* Rekomendasi menu sarapan, makan siang, dan makan malam beserta detail nutrisi dan harga
-* Status pemenuhan setiap constraint gizi
-* Jumlah generasi yang dibutuhkan dan nilai fitness terbaik
-* File `output/konvergensi.png` berisi grafik perkembangan fitness per generasi
+   ```
+   http://localhost:8000
+   ```
+
+## Script
+
+* `bun dev` — jalankan API dan web secara paralel dalam satu terminal
+* `bun dev:api` — jalankan hanya backend FastAPI
+* `bun dev:web` — jalankan hanya frontend Vite
+* `bun build:web` — build frontend untuk produksi
+
+## API Endpoint
+
+| Method | Endpoint | Deskripsi |
+|--------|----------|-----------|
+| POST | `/optimize` | Jalankan GA, kembalikan hasil optimasi lengkap |
+| GET | `/dataset` | Ambil daftar 30 makanan dalam format JSON |
+| GET | `/dataset/csv` | Unduh dataset dalam format CSV |
+| GET | `/health` | Cek status API |
 
 ## Parameter GA
 
@@ -101,13 +136,6 @@ sisehat/
 | Lemak | — | 70 g |
 | Karbohidrat | 250 g | 350 g |
 | Anggaran | — | Rp60.000 |
-
-## Catatan Struktur
-
-* `data.py` adalah sumber tunggal dataset — semua modul lain mengimpornya dari sini.
-* `fitness.py` hanya berisi satu fungsi murni tanpa side effect.
-* `ga.py` tidak mencetak output apapun — semua output ditangani `utils.py`.
-* `output/` di-generate otomatis saat program dijalankan dan masuk `.gitignore`.
 
 ---
 
