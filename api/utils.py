@@ -1,5 +1,4 @@
 import os
-import matplotlib.pyplot as plt
 from data import makanan
 from fitness import fitness
 
@@ -58,6 +57,7 @@ def cetak_constraints(kromosom):
 
 
 def plot_konvergensi(riwayat_fitness):
+    import matplotlib.pyplot as plt
     generasi  = [r["generasi"]  for r in riwayat_fitness]
     terbaik   = [r["terbaik"]   for r in riwayat_fitness]
     rata_rata = [r["rata_rata"] for r in riwayat_fitness]
