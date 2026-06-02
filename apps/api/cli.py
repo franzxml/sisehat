@@ -1,5 +1,5 @@
 from ga import jalankan_ga
-from utils import cetak_kromosom, evaluasi_constraints, plot_konvergensi
+from utils import cetak_kromosom, cetak_constraints, plot_konvergensi
 
 
 def main():
@@ -19,7 +19,7 @@ def main():
     )
 
     cetak_kromosom(hasil["kromosom_terbaik"])
-    evaluasi_constraints(hasil["kromosom_terbaik"])
+    cetak_constraints(hasil["kromosom_terbaik"])
 
     print(f"\nGenerasi selesai : {hasil['generasi_selesai']}")
     print(f"Fitness terbaik  : {hasil['fitness_terbaik']}")

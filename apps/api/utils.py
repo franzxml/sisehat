@@ -1,3 +1,4 @@
+import os
 import matplotlib.pyplot as plt
 from data import makanan
 from fitness import fitness
@@ -12,6 +13,17 @@ def hitung_nutrisi(kromosom):
         "lemak":   m1[2] + m2[2] + m3[2],
         "karbo":   m1[3] + m2[3] + m3[3],
         "harga":   m1[4] + m2[4] + m3[4],
+    }
+
+
+def evaluasi_constraints(kromosom):
+    n = hitung_nutrisi(kromosom)
+    return {
+        "kalori":   {"nilai": n["kalori"],  "status": "TERPENUHI" if 1800 <= n["kalori"] <= 2400 else "TIDAK TERPENUHI"},
+        "protein":  {"nilai": n["protein"], "status": "TERPENUHI" if n["protein"] >= 55 else "TIDAK TERPENUHI"},
+        "lemak":    {"nilai": n["lemak"],   "status": "TERPENUHI" if n["lemak"] <= 70 else "TIDAK TERPENUHI"},
+        "karbo":    {"nilai": n["karbo"],   "status": "TERPENUHI" if 250 <= n["karbo"] <= 350 else "TIDAK TERPENUHI"},
+        "anggaran": {"nilai": n["harga"],   "status": "TERPENUHI" if n["harga"] <= 60000 else "TIDAK TERPENUHI"},
     }
 
 
@@ -34,26 +46,15 @@ def cetak_kromosom(kromosom):
     print("=" * 55)
 
 
-def evaluasi_constraints(kromosom):
-    g1, g2, g3 = kromosom
+def cetak_constraints(kromosom):
     n = hitung_nutrisi(kromosom)
-
-    hasil = {
-        "kalori":   {"nilai": n["kalori"],  "status": "TERPENUHI" if 1800 <= n["kalori"] <= 2400 else "TIDAK TERPENUHI"},
-        "protein":  {"nilai": n["protein"], "status": "TERPENUHI" if n["protein"] >= 55 else "TIDAK TERPENUHI"},
-        "lemak":    {"nilai": n["lemak"],   "status": "TERPENUHI" if n["lemak"] <= 70 else "TIDAK TERPENUHI"},
-        "karbo":    {"nilai": n["karbo"],   "status": "TERPENUHI" if 250 <= n["karbo"] <= 350 else "TIDAK TERPENUHI"},
-        "anggaran": {"nilai": n["harga"],   "status": "TERPENUHI" if n["harga"] <= 60000 else "TIDAK TERPENUHI"},
-    }
-
+    c = evaluasi_constraints(kromosom)
     print("\n=== Evaluasi Constraints ===")
-    print(f"Kalori   : {n['kalori']} kkal    → {hasil['kalori']['status']} (1800–2400 kkal)")
-    print(f"Protein  : {n['protein']} g       → {hasil['protein']['status']} (min. 55 g)")
-    print(f"Lemak    : {n['lemak']} g       → {hasil['lemak']['status']} (maks. 70 g)")
-    print(f"Karbo    : {n['karbo']} g      → {hasil['karbo']['status']} (250–350 g)")
-    print(f"Anggaran : {format_rupiah(n['harga'])}  → {hasil['anggaran']['status']} (maks. Rp60.000)")
-
-    return hasil
+    print(f"Kalori   : {n['kalori']} kkal  → {c['kalori']['status']} (1800–2400 kkal)")
+    print(f"Protein  : {n['protein']} g     → {c['protein']['status']} (min. 55 g)")
+    print(f"Lemak    : {n['lemak']} g     → {c['lemak']['status']} (maks. 70 g)")
+    print(f"Karbo    : {n['karbo']} g    → {c['karbo']['status']} (250–350 g)")
+    print(f"Anggaran : {format_rupiah(n['harga'])}  → {c['anggaran']['status']} (maks. Rp60.000)")
 
 
 def plot_konvergensi(riwayat_fitness):
@@ -73,7 +74,6 @@ def plot_konvergensi(riwayat_fitness):
     plt.legend()
     plt.grid(True, alpha=0.3)
     plt.tight_layout()
-    import os
     os.makedirs("output", exist_ok=True)
     plt.savefig("output/konvergensi.png", dpi=150)
     plt.close()

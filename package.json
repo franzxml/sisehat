@@ -1,0 +1,14 @@
+{
+  "name": "sisehat",
+  "private": true,
+  "workspaces": ["apps/web"],
+  "scripts": {
+    "dev": "concurrently --names api,web --prefix-colors green,blue \"bun run dev:api\" \"bun run dev:web\"",
+    "dev:api": "apps/api/.venv/bin/uvicorn main:app --reload --port 8000 --app-dir apps/api",
+    "dev:web": "bun run --cwd apps/web dev",
+    "build:web": "bun run --cwd apps/web build"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.3"
+  }
+}

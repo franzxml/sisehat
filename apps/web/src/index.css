@@ -1,0 +1,25 @@
+@import "tailwindcss";
+
+* {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+@keyframes expandDown {
+  from {
+    grid-template-rows: 0fr;
+    opacity: 0;
+  }
+  to {
+    grid-template-rows: 1fr;
+    opacity: 1;
+  }
+}
+
+.animate-expand-down {
+  display: grid;
+  animation: expandDown 0.35s ease forwards;
+}
+
+.animate-expand-down > * {
+  overflow: hidden;
+}

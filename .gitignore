@@ -11,6 +11,11 @@ __pycache__/
 # Output generated
 output/
 
+# Node / Bun
+node_modules/
+dist/
+bun.lock
+
 # OS files
 .DS_Store
 Thumbs.db
