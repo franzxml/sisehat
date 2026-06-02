@@ -26,15 +26,15 @@
 
 ```text
 sisehat/
+|-- api/                      # Backend FastAPI + Algoritma Genetika
+|   |-- index.py              # Entry point Vercel + FastAPI app
+|   |-- data.py               # Dataset 30 makanan dan konstanta rentang ID
+|   |-- fitness.py            # Fungsi fitness dengan pendekatan penalti
+|   |-- ga.py                 # Logika utama GA: inisialisasi, seleksi, crossover, mutasi
+|   |-- utils.py              # Fungsi bantu: hitung nutrisi, evaluasi constraints, grafik
+|   |-- cli.py                # Entry point CLI untuk menjalankan GA di terminal
+|   `-- requirements.txt
 |-- apps/
-|   |-- api/                  # Backend FastAPI + Algoritma Genetika
-|   |   |-- data.py           # Dataset 30 makanan dan konstanta rentang ID
-|   |   |-- fitness.py        # Fungsi fitness dengan pendekatan penalti
-|   |   |-- ga.py             # Logika utama GA: inisialisasi, seleksi, crossover, mutasi
-|   |   |-- utils.py          # Fungsi bantu: hitung nutrisi, evaluasi constraints, grafik
-|   |   |-- main.py           # FastAPI app dengan endpoint REST
-|   |   |-- cli.py            # Entry point CLI untuk menjalankan GA di terminal
-|   |   `-- requirements.txt
 |   `-- web/                  # Frontend React
 |       |-- src/
 |       |   |-- components/   # MenuCard, ConstraintBadge, DatasetTable, KonvergensiChart
@@ -43,11 +43,12 @@ sisehat/
 |       |   `-- App.tsx
 |       |-- index.html
 |       `-- package.json
+|-- vercel.json               # Konfigurasi deployment Vercel
 |-- package.json              # Bun workspaces root
 `-- .gitignore
 ```
 
-## Cara Menjalankan
+## Cara Menjalankan Lokal
 
 1. Pastikan komputer sudah memiliki **Python 3.8+**, **Bun**, dan **Git**.
 
@@ -68,9 +69,9 @@ sisehat/
 3. Setup virtual environment backend.
 
    ```bash
-   python3 -m venv apps/api/.venv
-   source apps/api/.venv/bin/activate
-   pip install -r apps/api/requirements.txt
+   python3 -m venv api/.venv
+   source api/.venv/bin/activate
+   pip install -r api/requirements.txt
    ```
 
 4. Install dependensi frontend.
@@ -108,10 +109,10 @@ sisehat/
 
 | Method | Endpoint | Deskripsi |
 |--------|----------|-----------|
-| POST | `/optimize` | Jalankan GA, kembalikan hasil optimasi lengkap |
-| GET | `/dataset` | Ambil daftar 30 makanan dalam format JSON |
-| GET | `/dataset/csv` | Unduh dataset dalam format CSV |
-| GET | `/health` | Cek status API |
+| POST | `/api/optimize` | Jalankan GA, kembalikan hasil optimasi lengkap |
+| GET | `/api/dataset` | Ambil daftar 30 makanan dalam format JSON |
+| GET | `/api/dataset/csv` | Unduh dataset dalam format CSV |
+| GET | `/api/health` | Cek status API |
 
 ## Parameter GA
 
@@ -126,6 +127,10 @@ sisehat/
 | Metode Mutasi | Random Reset |
 | Fitness Target | 95 |
 | Elitisme | 1 individu terbaik |
+
+## Domain
+
+* **Production:** https://sisehat-nine.vercel.app
 
 ## Constraints
 
