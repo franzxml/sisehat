@@ -26,6 +26,14 @@ app.add_middleware(
 router = APIRouter(prefix="/api")
 
 
+class ParameterGA(BaseModel):
+    ukuran_populasi: int = 50
+    maks_generasi: int = 100
+    prob_crossover: float = 0.8
+    prob_mutasi: float = 0.05
+    fitness_target: float = 95
+
+
 class HasilOptimasi(BaseModel):
     kromosom: list[int]
     menu: dict
@@ -35,6 +43,7 @@ class HasilOptimasi(BaseModel):
     generasi_selesai: int
     waktu_komputasi: float
     riwayat_fitness: list[dict]
+    parameter: dict
 
 
 def waktu_makan(id: int) -> str:
@@ -58,9 +67,15 @@ def build_item_menu(id: int) -> dict:
 
 
 @router.post("/optimize", response_model=HasilOptimasi)
-def optimize():
+def optimize(params: ParameterGA = ParameterGA()):
     t0 = time.time()
-    hasil = jalankan_ga()
+    hasil = jalankan_ga(
+        ukuran_populasi=params.ukuran_populasi,
+        maks_generasi=params.maks_generasi,
+        prob_crossover=params.prob_crossover,
+        prob_mutasi=params.prob_mutasi,
+        fitness_target=params.fitness_target,
+    )
     waktu = round(time.time() - t0, 3)
     kromosom = hasil["kromosom_terbaik"]
     g1, g2, g3 = kromosom
@@ -78,6 +93,7 @@ def optimize():
         generasi_selesai=hasil["generasi_selesai"],
         waktu_komputasi=waktu,
         riwayat_fitness=hasil["riwayat_fitness"],
+        parameter=params.model_dump(),
     )
 
 

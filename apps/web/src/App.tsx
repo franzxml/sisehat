@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react'
 import { optimize, fetchDataset, downloadDatasetCSV } from './services/api'
-import type { HasilOptimasi, ItemDataset } from './types/optimasi'
+import type { HasilOptimasi, ItemDataset, ParameterGA } from './types/optimasi'
 import MenuCard from './components/MenuCard'
 import ConstraintBadge from './components/ConstraintBadge'
 import DatasetTable from './components/DatasetTable'
 import KonvergensiChart from './components/KonvergensiChart'
+import ParameterForm, { DEFAULTS } from './components/ParameterForm'
 
 export default function App() {
   const [hasil, setHasil] = useState<HasilOptimasi | null>(null)
@@ -12,6 +13,12 @@ export default function App() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [showDataset, setShowDataset] = useState(false)
+  const [showParams, setShowParams] = useState(false)
+  const [params, setParams] = useState<ParameterGA>({ ...DEFAULTS })
+
+  const isModified = Object.keys(DEFAULTS).some(
+    (k) => params[k as keyof ParameterGA] !== DEFAULTS[k as keyof ParameterGA]
+  )
 
   useEffect(() => {
     fetchDataset().then(setDataset).catch(() => {})
@@ -21,7 +28,7 @@ export default function App() {
     setLoading(true)
     setError(null)
     try {
-      const data = await optimize()
+      const data = await optimize(params)
       setHasil(data)
     } catch {
       setError('Gagal menghubungi server. Pastikan API berjalan.')
@@ -53,30 +60,48 @@ export default function App() {
             </p>
           </div>
 
-          {dataset.length > 0 && (
-            <>
-              {/* Mobile & tablet: langsung download CSV */}
-              <button
-                onClick={downloadDatasetCSV}
-                className="lg:hidden text-xs text-gray-400 hover:text-green-600 transition-colors underline underline-offset-4 cursor-pointer"
-              >
-                Unduh dataset ({dataset.length} makanan) sebagai CSV
-              </button>
-
-              {/* Desktop: toggle tabel */}
-              <button
-                onClick={() => setShowDataset((v) => !v)}
-                className="hidden lg:block text-xs text-gray-400 hover:text-green-600 transition-colors underline underline-offset-4 cursor-pointer"
-              >
-                {showDataset ? 'Sembunyikan dataset' : `Lihat ${dataset.length} makanan yang digunakan`}
-              </button>
-            </>
-          )}
+          {/* Link-link kecil */}
+          <div className="flex items-center gap-4">
+            {dataset.length > 0 && (
+              <>
+                <button
+                  onClick={downloadDatasetCSV}
+                  className="lg:hidden text-xs text-gray-400 hover:text-green-600 transition-colors underline underline-offset-4 cursor-pointer"
+                >
+                  Unduh dataset ({dataset.length} makanan) sebagai CSV
+                </button>
+                <button
+                  onClick={() => setShowDataset((v) => !v)}
+                  className="hidden lg:block text-xs text-gray-400 hover:text-green-600 transition-colors underline underline-offset-4 cursor-pointer"
+                >
+                  {showDataset ? 'Sembunyikan dataset' : `Lihat ${dataset.length} makanan yang digunakan`}
+                </button>
+              </>
+            )}
+            <button
+              onClick={() => setShowParams((v) => !v)}
+              className={`text-xs underline underline-offset-4 transition-colors cursor-pointer ${isModified ? 'text-green-600 hover:text-green-700' : 'text-gray-400 hover:text-green-600'}`}
+            >
+              {showParams ? 'Sembunyikan parameter' : isModified ? 'Parameter diubah' : 'Parameter eksperimen'}
+            </button>
+          </div>
 
           {showDataset && dataset.length > 0 && (
             <div className="w-full text-left animate-expand-down hidden lg:block">
               <div>
                 <DatasetTable data={dataset} />
+              </div>
+            </div>
+          )}
+
+          {showParams && (
+            <div className="w-full text-left animate-expand-down">
+              <div>
+                <ParameterForm
+                  params={params}
+                  onChange={setParams}
+                  onReset={() => setParams({ ...DEFAULTS })}
+                />
               </div>
             </div>
           )}
@@ -103,6 +128,11 @@ export default function App() {
             <p className="text-xs text-gray-400 mt-2">
               Selesai di generasi {hasil.generasi_selesai} · {hasil.waktu_komputasi}s
             </p>
+            {isModified && (
+              <p className="text-xs text-green-600 mt-1 font-medium">
+                Populasi {hasil.parameter.ukuran_populasi} · Crossover {hasil.parameter.prob_crossover} · Mutasi {hasil.parameter.prob_mutasi}
+              </p>
+            )}
           </div>
 
           <div className="flex flex-col gap-3">

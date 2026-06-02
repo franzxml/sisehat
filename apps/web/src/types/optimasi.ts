@@ -12,6 +12,14 @@ export interface ItemDataset extends ItemMenu {
   waktu_makan: string
 }
 
+export interface ParameterGA {
+  ukuran_populasi: number
+  maks_generasi: number
+  prob_crossover: number
+  prob_mutasi: number
+  fitness_target: number
+}
+
 export interface HasilOptimasi {
   kromosom: number[]
   menu: {
@@ -36,4 +44,5 @@ export interface HasilOptimasi {
     rata_rata: number
     terburuk: number
   }>
+  parameter: ParameterGA
 }
