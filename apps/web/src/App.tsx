@@ -7,6 +7,15 @@ import DatasetTable from './components/DatasetTable'
 import KonvergensiChart from './components/KonvergensiChart'
 import ParameterForm, { DEFAULTS } from './components/ParameterForm'
 
+function IconGear() {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+      <circle cx="12" cy="12" r="3"/>
+    </svg>
+  )
+}
+
 export default function App() {
   const [hasil, setHasil] = useState<HasilOptimasi | null>(null)
   const [dataset, setDataset] = useState<ItemDataset[]>([])
@@ -60,31 +69,23 @@ export default function App() {
             </p>
           </div>
 
-          {/* Link-link kecil */}
-          <div className="flex items-center gap-4">
-            {dataset.length > 0 && (
-              <>
-                <button
-                  onClick={downloadDatasetCSV}
-                  className="lg:hidden text-xs text-gray-400 hover:text-green-600 transition-colors underline underline-offset-4 cursor-pointer"
-                >
-                  Unduh dataset ({dataset.length} makanan) sebagai CSV
-                </button>
-                <button
-                  onClick={() => setShowDataset((v) => !v)}
-                  className="hidden lg:block text-xs text-gray-400 hover:text-green-600 transition-colors underline underline-offset-4 cursor-pointer"
-                >
-                  {showDataset ? 'Sembunyikan dataset' : `Lihat ${dataset.length} makanan yang digunakan`}
-                </button>
-              </>
-            )}
-            <button
-              onClick={() => setShowParams((v) => !v)}
-              className={`text-xs underline underline-offset-4 transition-colors cursor-pointer ${isModified ? 'text-green-600 hover:text-green-700' : 'text-gray-400 hover:text-green-600'}`}
-            >
-              {showParams ? 'Sembunyikan parameter' : isModified ? 'Parameter diubah' : 'Parameter eksperimen'}
-            </button>
-          </div>
+          {/* Dataset link — subtle di bawah subtitle */}
+          {dataset.length > 0 && (
+            <div className="-mt-3">
+              <button
+                onClick={downloadDatasetCSV}
+                className="lg:hidden text-xs text-gray-400 hover:text-green-600 transition-colors underline underline-offset-4 cursor-pointer"
+              >
+                Unduh dataset ({dataset.length} makanan) sebagai CSV
+              </button>
+              <button
+                onClick={() => setShowDataset((v) => !v)}
+                className="hidden lg:block text-xs text-gray-400 hover:text-green-600 transition-colors underline underline-offset-4 cursor-pointer"
+              >
+                {showDataset ? 'Sembunyikan dataset' : `Lihat ${dataset.length} makanan yang digunakan`}
+              </button>
+            </div>
+          )}
 
           {showDataset && dataset.length > 0 && (
             <div className="w-full text-left animate-expand-down hidden lg:block">
@@ -94,6 +95,7 @@ export default function App() {
             </div>
           )}
 
+          {/* Parameter form */}
           {showParams && (
             <div className="w-full text-left animate-expand-down">
               <div>
@@ -106,12 +108,24 @@ export default function App() {
             </div>
           )}
 
+          {/* Primary CTA */}
           <button
             onClick={handleOptimize}
             disabled={loading}
             className="w-full sm:w-auto bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white font-bold px-10 py-4 rounded-2xl text-base transition-all cursor-pointer shadow-lg shadow-green-200 hover:shadow-green-300 hover:-translate-y-0.5 active:translate-y-0"
           >
             {loading ? 'Menjalankan...' : hasil ? 'Cari Ulang Menu Optimal' : 'Cari Menu Optimal'}
+          </button>
+
+          {/* Secondary — parameter GA */}
+          <button
+            onClick={() => setShowParams((v) => !v)}
+            className={`flex items-center gap-1.5 text-sm font-medium transition-colors cursor-pointer ${
+              isModified ? 'text-green-600 hover:text-green-700' : 'text-gray-500 hover:text-gray-700'
+            }`}
+          >
+            <IconGear />
+            {isModified ? 'Parameter diubah ·' : ''} Atur parameter GA
           </button>
 
           {error && <p className="text-red-500 text-sm">{error}</p>}

@@ -53,7 +53,7 @@ export default function ParameterForm({ params, onChange, onReset }: Props) {
     onChange({ ...params, [name]: value })
   }
 
-  const isModified = Object.keys(DEFAULTS).some(
+  const adaYangDiubah = Object.keys(DEFAULTS).some(
     (k) => params[k as keyof ParameterGA] !== DEFAULTS[k as keyof ParameterGA]
   )
 
@@ -64,7 +64,7 @@ export default function ParameterForm({ params, onChange, onReset }: Props) {
           <h2 className="font-bold text-gray-800">Parameter Eksperimen</h2>
           <p className="text-xs text-gray-400 mt-0.5">Ubah parameter GA untuk eksperimen. Default = nilai studi kasus.</p>
         </div>
-        {isModified && (
+        {adaYangDiubah && (
           <button
             onClick={onReset}
             className="text-xs text-gray-400 hover:text-red-500 transition-colors underline underline-offset-2 cursor-pointer"
