@@ -4,12 +4,13 @@ import time
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
+from fastapi.routing import APIRouter
 from pydantic import BaseModel
 from ga import jalankan_ga
 from utils import hitung_nutrisi, evaluasi_constraints
 from data import makanan, SARAPAN_IDS, SIANG_IDS, MALAM_IDS
 
-app = FastAPI(title="SiSehat API")
+app = FastAPI(title="Sisehat API")
 
 app.add_middleware(
     CORSMiddleware,
@@ -17,6 +18,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+router = APIRouter(prefix="/api")
 
 
 class HasilOptimasi(BaseModel):
@@ -50,7 +53,7 @@ def build_item_menu(id: int) -> dict:
     }
 
 
-@app.post("/optimize", response_model=HasilOptimasi)
+@router.post("/optimize", response_model=HasilOptimasi)
 def optimize():
     t0 = time.time()
     hasil = jalankan_ga()
@@ -74,7 +77,7 @@ def optimize():
     )
 
 
-@app.get("/dataset")
+@router.get("/dataset")
 def dataset():
     return [
         {**build_item_menu(id), "id": id, "waktu_makan": waktu_makan(id)}
@@ -82,7 +85,7 @@ def dataset():
     ]
 
 
-@app.get("/dataset/csv")
+@router.get("/dataset/csv")
 def dataset_csv():
     output = io.StringIO()
     writer = csv.writer(output)
@@ -97,6 +100,9 @@ def dataset_csv():
     )
 
 
-@app.get("/health")
+@router.get("/health")
 def health():
     return {"status": "ok"}
+
+
+app.include_router(router)
