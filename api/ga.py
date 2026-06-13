@@ -4,7 +4,7 @@ from data import SARAPAN_IDS, SIANG_IDS, MALAM_IDS
 from fitness import fitness
 
 
-def inisialisasi_populasi(ukuran_populasi):
+def inisialisasi_populasi(ukuran_populasi: int) -> list[list[int]]:
     populasi = []
     for _ in range(ukuran_populasi):
         kromosom = [
@@ -16,12 +16,12 @@ def inisialisasi_populasi(ukuran_populasi):
     return populasi
 
 
-def seleksi_tournament(populasi, tournament_size=3):
+def seleksi_tournament(populasi: list[list[int]], tournament_size: int = 3) -> list[int]:
     kandidat = random.sample(populasi, tournament_size)
     return max(kandidat, key=lambda k: fitness(k[0], k[1], k[2]))
 
 
-def crossover(induk1, induk2, prob_crossover=0.8):
+def crossover(induk1: list[int], induk2: list[int], prob_crossover: float = 0.8) -> tuple[list[int], list[int]]:
     if random.random() < prob_crossover:
         titik = random.randint(1, 2)
         anak1 = induk1[:titik] + induk2[titik:]
@@ -30,7 +30,7 @@ def crossover(induk1, induk2, prob_crossover=0.8):
     return copy.copy(induk1), copy.copy(induk2)
 
 
-def mutasi(kromosom, prob_mutasi=0.05):
+def mutasi(kromosom: list[int], prob_mutasi: float = 0.05) -> list[int]:
     rentang = [SARAPAN_IDS, SIANG_IDS, MALAM_IDS]
     hasil = copy.copy(kromosom)
     for i in range(3):
@@ -40,12 +40,12 @@ def mutasi(kromosom, prob_mutasi=0.05):
 
 
 def jalankan_ga(
-    ukuran_populasi=50,
-    maks_generasi=100,
-    prob_crossover=0.8,
-    prob_mutasi=0.05,
-    fitness_target=95,
-):
+    ukuran_populasi: int = 50,
+    maks_generasi: int = 100,
+    prob_crossover: float = 0.8,
+    prob_mutasi: float = 0.05,
+    fitness_target: float = 95,
+) -> dict:
     populasi = inisialisasi_populasi(ukuran_populasi)
     riwayat_fitness = []
 

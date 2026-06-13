@@ -1,7 +1,8 @@
 @import "tailwindcss";
 
-* {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+@theme {
+  --font-sans: 'Plus Jakarta Sans', sans-serif;
+  --color-page-bg: #f7f8f5;
 }
 
 @keyframes expandDown {

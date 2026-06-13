@@ -6,19 +6,12 @@ import ConstraintBadge from './components/ConstraintBadge'
 import DatasetTable from './components/DatasetTable'
 import KonvergensiChart from './components/KonvergensiChart'
 import ParameterForm, { DEFAULTS } from './components/ParameterForm'
-
-function IconGear() {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
-      <circle cx="12" cy="12" r="3"/>
-    </svg>
-  )
-}
+import IconGear from './components/IconGear'
 
 export default function App() {
   const [hasil, setHasil] = useState<HasilOptimasi | null>(null)
   const [dataset, setDataset] = useState<ItemDataset[]>([])
+  const [datasetError, setDatasetError] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [showDataset, setShowDataset] = useState(false)
@@ -30,7 +23,9 @@ export default function App() {
   )
 
   useEffect(() => {
-    fetchDataset().then(setDataset).catch(() => {})
+    fetchDataset()
+      .then(setDataset)
+      .catch(() => setDatasetError(true))
   }, [])
 
   async function handleOptimize() {
@@ -47,7 +42,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f7f8f5] text-gray-800">
+    <div className="min-h-screen bg-page-bg font-sans text-gray-800">
 
       {/* Hero */}
       <div className={`relative flex flex-col items-center justify-center text-center px-4 overflow-hidden transition-all duration-500 ${!hasil ? 'min-h-screen' : 'py-16 sm:min-h-[400px]'}`}>
@@ -85,6 +80,9 @@ export default function App() {
                 {showDataset ? 'Sembunyikan dataset' : `Lihat ${dataset.length} makanan yang digunakan`}
               </button>
             </div>
+          )}
+          {datasetError && (
+            <p className="text-xs text-gray-400 -mt-3">Dataset tidak dapat dimuat.</p>
           )}
 
           {showDataset && dataset.length > 0 && (

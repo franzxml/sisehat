@@ -3,7 +3,7 @@ from data import makanan
 from fitness import fitness
 
 
-def hitung_nutrisi(kromosom):
+def hitung_nutrisi(kromosom: list[int]) -> dict:
     g1, g2, g3 = kromosom
     m1, m2, m3 = makanan[g1], makanan[g2], makanan[g3]
     return {
@@ -15,7 +15,7 @@ def hitung_nutrisi(kromosom):
     }
 
 
-def evaluasi_constraints(kromosom):
+def evaluasi_constraints(kromosom: list[int]) -> dict:
     n = hitung_nutrisi(kromosom)
     return {
         "kalori":   {"nilai": n["kalori"],  "status": "TERPENUHI" if 1800 <= n["kalori"] <= 2400 else "TIDAK TERPENUHI"},
@@ -26,11 +26,11 @@ def evaluasi_constraints(kromosom):
     }
 
 
-def format_rupiah(nilai):
+def format_rupiah(nilai: int | float) -> str:
     return f"Rp{nilai:,.0f}".replace(",", ".")
 
 
-def cetak_kromosom(kromosom):
+def cetak_kromosom(kromosom: list[int]) -> None:
     g1, g2, g3 = kromosom
     m1, m2, m3 = makanan[g1], makanan[g2], makanan[g3]
     n = hitung_nutrisi(kromosom)
@@ -45,7 +45,7 @@ def cetak_kromosom(kromosom):
     print("=" * 55)
 
 
-def cetak_constraints(kromosom):
+def cetak_constraints(kromosom: list[int]) -> None:
     n = hitung_nutrisi(kromosom)
     c = evaluasi_constraints(kromosom)
     print("\n=== Evaluasi Constraints ===")
@@ -56,7 +56,7 @@ def cetak_constraints(kromosom):
     print(f"Anggaran : {format_rupiah(n['harga'])}  → {c['anggaran']['status']} (maks. Rp60.000)")
 
 
-def plot_konvergensi(riwayat_fitness):
+def plot_konvergensi(riwayat_fitness: list[dict]) -> None:
     import matplotlib.pyplot as plt
     generasi  = [r["generasi"]  for r in riwayat_fitness]
     terbaik   = [r["terbaik"]   for r in riwayat_fitness]

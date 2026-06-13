@@ -6,10 +6,10 @@ sys.path.insert(0, os.path.dirname(__file__))
 import csv
 import io
 import time
-from fastapi import FastAPI, APIRouter
+from fastapi import FastAPI, APIRouter, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from ga import jalankan_ga
 from utils import hitung_nutrisi, evaluasi_constraints
 from data import makanan, SARAPAN_IDS, SIANG_IDS, MALAM_IDS
@@ -18,8 +18,11 @@ app = FastAPI(title="Sisehat API")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_methods=["*"],
+    allow_origins=[
+        "https://sisehat-nine.vercel.app",
+        "http://localhost:5173",
+    ],
+    allow_methods=["GET", "POST"],
     allow_headers=["*"],
 )
 
@@ -27,11 +30,11 @@ router = APIRouter(prefix="/api")
 
 
 class ParameterGA(BaseModel):
-    ukuran_populasi: int = 50
-    maks_generasi: int = 100
-    prob_crossover: float = 0.8
-    prob_mutasi: float = 0.05
-    fitness_target: float = 95
+    ukuran_populasi: int = Field(default=50, ge=10, le=500)
+    maks_generasi: int = Field(default=100, ge=1, le=1000)
+    prob_crossover: float = Field(default=0.8, ge=0.0, le=1.0)
+    prob_mutasi: float = Field(default=0.05, ge=0.0, le=1.0)
+    fitness_target: float = Field(default=95, ge=0.0, le=100.0)
 
 
 class HasilOptimasi(BaseModel):
@@ -69,13 +72,16 @@ def build_item_menu(id: int) -> dict:
 @router.post("/optimize", response_model=HasilOptimasi)
 def optimize(params: ParameterGA = ParameterGA()):
     t0 = time.time()
-    hasil = jalankan_ga(
-        ukuran_populasi=params.ukuran_populasi,
-        maks_generasi=params.maks_generasi,
-        prob_crossover=params.prob_crossover,
-        prob_mutasi=params.prob_mutasi,
-        fitness_target=params.fitness_target,
-    )
+    try:
+        hasil = jalankan_ga(
+            ukuran_populasi=params.ukuran_populasi,
+            maks_generasi=params.maks_generasi,
+            prob_crossover=params.prob_crossover,
+            prob_mutasi=params.prob_mutasi,
+            fitness_target=params.fitness_target,
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"GA gagal: {e}")
     waktu = round(time.time() - t0, 3)
     kromosom = hasil["kromosom_terbaik"]
     g1, g2, g3 = kromosom

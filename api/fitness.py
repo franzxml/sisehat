@@ -1,7 +1,7 @@
 from data import makanan
 
 
-def fitness(g1, g2, g3):
+def fitness(g1: int, g2: int, g3: int) -> float:
     kalori  = makanan[g1][0] + makanan[g2][0] + makanan[g3][0]
     protein = makanan[g1][1] + makanan[g2][1] + makanan[g3][1]
     lemak   = makanan[g1][2] + makanan[g2][2] + makanan[g3][2]
